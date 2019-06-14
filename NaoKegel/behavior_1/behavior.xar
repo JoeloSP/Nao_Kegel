@@ -1,86 +1,9 @@
-<?xml version="1.0" encoding="UTF-8" ?><ChoregrapheProject xmlns="http://www.aldebaran-robotics.com/schema/choregraphe/project.xsd" xar_version="3"><Box name="root" id="-1" localization="8" tooltip="Root box of Choregraphe&apos;s behavior. Highest level possible." x="0" y="0"><bitmap>media/images/box/root.png</bitmap><script language="4"><content><![CDATA[]]></content></script><Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" /><Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" /><Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" /><Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" /><Timeline enable="0"><BehaviorLayer name="behavior_layer1"><BehaviorKeyframe name="keyframe1" index="1"><Diagram><Box name="Show Image" id="13" localization="8" tooltip="display an image on the screen&#x0A;&#x0A;V1.0.0&#x0A;" x="342" y="150"><bitmap>media/images/box/interaction/rec_movie.png</bitmap><script language="4"><content><![CDATA[
-
-class MyClass(GeneratedClass):
-
-    def onLoad(self):
-        pass
-
-    def onUnload(self):
-        pass
-
-    def _getTabletService(self):
-        tabletService = None
-        try:
-            tabletService = self.session().service("ALTabletService")
-        except Exception as e:
-            self.logger.error(e)
-        return tabletService
-
-    def _getAbsoluteUrl(self, partial_url):
-        import os
-        subPath = os.path.join(self.packageUid(), os.path.normpath(partial_url).lstrip("\\/"))
-        # We create TabletService here in order to avoid
-        # problems with connections and disconnections of the tablet during the life of the application
-        return "http://%s/apps/%s" %(self._getTabletService().robotIp(), subPath.replace(os.path.sep, "/"))
-
-    def onInput_onStart(self):
-        # We create TabletService here in order to avoid
-        # problems with connections and disconnections of the tablet during the life of the application
-        tabletService = self._getTabletService()
-        if tabletService:
-            try:
-                url = self.getParameter("ImageUrl")
-                if url == '':
-                    self.logger.error("URL of the image is empty")
-                if not url.startswith('http'):
-                    url = self._getAbsoluteUrl(url)
-                tabletService.showImage(url)
-            except Exception as err:
-                self.logger.error("Error during ShowImage : %s " % err)
-                self.onStopped()
-        else:
-            self.logger.warning("No ALTabletService, can't display the image.")
-            self.onStopped()
-
-    def onInput_onHideImage(self):
-        # We create TabletService here in order to avoid
-        # problems with connections and disconnections of the tablet during the life of the application
-        tabletService = self._getTabletService()
-        if tabletService:
-            try:
-                tabletService.hideImage()
-            except Exception as err:
-                self.logger.error("Error during HideImage : %s " % err)
-                self.onStopped()
-        else:
-            self.logger.warning("No ALTabletService, can't hide the image.")
-            self.onStopped()
-
-    def onInput_onPreLoadImage(self):
-        # We create TabletService here in order to avoid
-        # problems with connections and disconnections of the tablet during the life of the application
-        tabletService = self._getTabletService()
-        if tabletService:
-            try:
-                partialUrl = self.getParameter("ImageUrl")
-                fullUrl = self._getAbsoluteUrl(partialUrl)
-                tabletService.preLoadImage(fullUrl)
-            except Exception as err:
-                self.logger.warning("Error during preLoadImage : %s " % err)
-                self.onStopped()
-        else:
-            self.logger.warning("No ALTabletService, can't preload the image.")
-            self.onStopped()
-
-    def onInput_onStop(self):
-        self.onUnload()
-        self.onStopped()]]></content></script><Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" /><Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" /><Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" /><Input name="onHideImage" type="1" type_size="1" nature="1" inner="0" tooltip="Hide the image when a signal is received on this input." id="4" /><Input name="onPreLoadImage" type="1" type_size="1" nature="1" inner="0" tooltip="Preload the image when a signal is received on this input." id="5" /><Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="6" /><Parameter name="ImageUrl" inherits_from_parent="0" content_type="3" value="" default_value="" custom_choice="0" tooltip='path of the image inside the &quot;html&quot; folder (e.g. &quot;/images/myimage.png&quot;' id="7" /></Box><Box name="GetKegel" id="1" localization="8" tooltip="Sucht und gibt ein Kegel zurück" x="101" y="68"><bitmap>media/images/box/tracker/tracker.png</bitmap><script language="4"><content><![CDATA[import cv2
+<?xml version="1.0" encoding="UTF-8" ?><ChoregrapheProject xmlns="http://www.aldebaran-robotics.com/schema/choregraphe/project.xsd" xar_version="3"><Box name="root" id="-1" localization="8" tooltip="Root box of Choregraphe&apos;s behavior. Highest level possible." x="0" y="0"><bitmap>media/images/box/root.png</bitmap><script language="4"><content><![CDATA[]]></content></script><Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" /><Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" /><Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" /><Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" /><Timeline enable="0"><BehaviorLayer name="behavior_layer1"><BehaviorKeyframe name="keyframe1" index="1"><Diagram><Box name="GetKegel" id="1" localization="8" tooltip="Sucht und gibt ein Kegel zurück" x="101" y="68"><bitmap>media/images/box/tracker/tracker.png</bitmap><script language="4"><content><![CDATA[import cv2
 import numpy
 # https://stackoverflow.com/questions/22593451/how-to-import-opencv-on-nao-in-python
 
 class MyClass(GeneratedClass):
-
-   cascadeFile = ''
+    cascadeFile = ''
 
     def __init__(self):
         GeneratedClass.__init__(self)
@@ -90,8 +13,8 @@ class MyClass(GeneratedClass):
     def onLoad(self):
         #put initialization code here
         self.connectToCamera()
-        cascadeFile = getParameter("Cascade")
-        self.log("GetKegel: Cascade: %s" % cascadeFile)
+        self.cascadeFile = ALFrameManager.getBehaviorPath(self.behaviorId) + self.getParameter("Cascade")
+        self.log("GetKegel: Cascade: %s" % self.cascadeFile)
         pass
 
     def onUnload(self):
@@ -122,21 +45,28 @@ class MyClass(GeneratedClass):
                 img = (numpy.reshape(numpy.frombuffer(dataImage[6], dtype = '%iuint8' % dataImage[2]), (dataImage[1], dataImage[0], dataImage[2])))
                 imageH, imageW, channels = img.shape
                 img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-                face_cascade = cv2.CascadeClassifier(cascadeFile)
-                faces = face_cascade.detectMultiScale(img_gray, 1.3, 5)
+                face_cascade = cv2.CascadeClassifier(self.cascadeFile)
+                faces = face_cascade.detectMultiScale(img_gray)
                 for x,y,w,h in faces:
                     if w > width:
                         width = w
                         height = h
                         pX = x
                         pY = y
+
+                    img = cv2.rectangle(img, (x,y), (x+w, y+h), (0, 255,0), 3)
+                    self.log("GetKegel: Kegel WERTE is: %s - %s ; Position: x %s y %s" % (w, h, x, y))
+
+                cv2.imwrite(ALFrameManager.getBehaviorPath(self.behaviorId) + 'Kegel_copy.png', img)
                 # Sendet ein Kegel-Objekt zurück, wenn er ein Kegel gefunden hat.
+                #self.log("GetKegel: Kegel height is: %s" % height)
                 if width > 0:
                     kegel = Kegel(pX, pY, width, height, imageW, imageH)
+                    self.log("GetKegel: camera Kegel is null: %s" % kegel is None)
                     self.Kegel(kegel)
                     self.KegelGefunden()
-                else
-                    self.onStopped()
+                #else
+                 #   self.onStopped()
 
         except BaseException, err:
             self.log("ERROR: Error getting camera image: %s" % err)
@@ -151,6 +81,7 @@ class MyClass(GeneratedClass):
         self.log("GetKegel: connecting to camera...")
         try:
             self.avd = ALProxy("ALVideoDevice")
+
             self.strMyClientName = self.avd.subscribeCamera(self.getName(), 0, 1, 11, 5)
             self.log("GetKegel: connected to camera")
         except BaseException, err:
@@ -180,141 +111,5 @@ class Kegel:
         self.Width = width
         self.Height = height
         self.ImageHeight = imageH
-        self.ImageWidth = imageW]]></content></script><Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" /><Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" /><Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" /><Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" /><Output name="KegelGefunden" type="1" type_size="1" nature="2" inner="0" tooltip="" id="5" /><Output name="Kegel" type="0" type_size="1" nature="2" inner="0" tooltip="Ein Kegel Objekt mit allen wichtigen Information (Höhe, Breite, Position X und Y)" id="6" /><Parameter name="Cascade" inherits_from_parent="0" content_type="4" value="/../HaarCascade/Cascade_Kegel_Normal.xml" default_value="" tooltip="" id="7" /></Box><Box name="GetKegelPosition" id="2" localization="8" tooltip="" plugin="C:/Python/3.7.3/Lib/site-packages/cv2/opencv_ffmpeg410" x="560" y="94"><bitmap>media/images/box/box-python-script.png</bitmap><script language="4"><content><![CDATA[import cv2
-import numpy
-
-
-class MyClass(GeneratedClass):
-    width = 0
-    height = 0
-    gefunden = 'true'
-    def __init__(self):
-        GeneratedClass.__init__(self)
-        self.avd = None
-        self.strMyClientName = None
-        #self.capture = cv2.CaptureFromCAM(0)
-    def onLoad(self):
-        #put initialization code here
-        self.connectToCamera()
-        self.getImageFromCamera()
-        self.disconnectFromCamera()
-        pass
-
-    def onUnload(self):
-        #put clean-up code here
-        self.avd = None
-        self.strMyClientName = None
-        pass
-
-    def onInput_onStart(self):
-        #self.onStopped() #activate the output of the box
-        vr = ALProxy("ALVisionRecognition")
-        self.log("DB size: %s" % vr.getSize())
-
-        pass
-
-    def onInput_onStop(self):
-        self.onUnload() #it is recommended to reuse the clean-up as the box is stopped
-        self.onStopped() #activate the output of the box
-
-    def connectToCamera(self):
-        self.log("STARTNAO: connecting to camera...")
-        try:
-            self.avd = ALProxy("ALVideoDevice")
-            self.strMyClientName = self.avd.subscribeCamera(self.getName(), 0, 1, 11, 5)
-            self.log("STARTNAO: connected to camera")
-        except BaseException, err:
-            self.log("STARTNAO: error connecting to camera: %s" % err)
-
-    def disconnectFromCamera(self):
-        self.log("STARTNAO: disconnecting from camera...")
-
-        try:
-            self.avd.unsubscribe( self.strMyClientName )
-        except BaseException, err:
-            self.log("STARTNAO: error disconnecting from camera: %s" % err)
-
-        self.log("STARTNAO: disconnected from camera")
-
-    def getImageFromCamera(self):
-        self.log("STARTNAO: getting camera image...")
-
-        try:
-            self.log("OpenCV Version %s" % cv2.__version__)
-            dataImage = self.avd.getImageRemote(self.strMyClientName)
-
-            self.log("STARTNAO: camera image is null: %s" % dataImage is None)
-
-            if dataImage is not None:
-                img = (numpy.reshape(numpy.frombuffer(dataImage[6], dtype = '%iuint8' % dataImage[2]), (dataImage[1], dataImage[0], dataImage[2])))
-                height, width, channels = img.shape
-                self.log("Image Size height: %s" % height)
-                self.log("Image Size width: %s" % width)
-                self.log("STARTNAO: camera image property [0]: %s" % dataImage[0])
-                self.log("STARTNAO: camera image property [1]: %s" % dataImage[1])
-                self.log("STARTNAO: camera image property [2]: %s" % dataImage[2])
-        except BaseException, err:
-            self.log("ERROR: Error getting camera image: %s" % err)
-
-        self.log("STARTNAO: camera image got")
-
-        return None]]></content></script><Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" /><Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" /><Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" /><Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" /><Output name="Width" type="2" type_size="1" nature="2" inner="0" tooltip="" id="5" /><Output name="Height" type="2" type_size="1" nature="2" inner="0" tooltip="" id="6" /><Output name="KegelGefunden" type="1" type_size="1" nature="2" inner="0" tooltip="" id="7" /><Output name="image" type="0" type_size="1" nature="2" inner="0" tooltip="" id="8" /></Box><Box name="FindAllKegel" id="3" localization="8" tooltip="Splittet ein Kegel-Objekt in deren bestandteile." x="166" y="223"><bitmap>media/images/box/world_representation/world_rep.png</bitmap><script language="4"><content><![CDATA[import cv2
-import numpy
-
-
-class MyClass(GeneratedClass):
-    cascadeFile = ''
-
-    def __init__(self):
-        GeneratedClass.__init__(self)
-
-    def onLoad(self):
-        #put initialization code here
-        self.connectToCamera()
-        cascadeFile = getParameter("Cascade")
-        self.log("FindAllKegel: Cascade: %s" % cascadeFile)
-        pass
-
-    def onUnload(self):
-        #put clean-up code here
-        self.disconnectFromCamera()
-        self.avd = None
-        self.strMyClientName = None
-        pass
-
-    def onInput_onStart(self):
-        #self.onStopped() #activate the output of the box
-        self.log("FindAllKegel: getting camera image...")
-
-        try:
-            self.log("OpenCV Version %s" % cv2.__version__)
-            dataImage = self.avd.getImageRemote(self.strMyClientName)
-
-            self.log("FindAllKegel: camera image is null: %s" % dataImage is None)
-
-            amount = 0
-            if dataImage is not None:
-                self.log("FindAllKegel: camera image got")
-                img = (numpy.reshape(numpy.frombuffer(dataImage[6], dtype = '%iuint8' % dataImage[2]), (dataImage[1], dataImage[0], dataImage[2])))
-                imageH, imageW, channels = img.shape
-                img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-                face_cascade = cv2.CascadeClassifier(cascadeFile)
-                faces = face_cascade.detectMultiScale(img_gray, 1.3, 5)
-                for x,y,w,h in faces:
-                    amount = amount +1
-
-                # Sendet ein Kegel-Objekt zurück, wenn er ein Kegel gefunden hat.
-                self.Amount(amount)
-                self.onStopped()
-
-        except BaseException, err:
-            self.log("ERROR: Error getting camera image: %s" % err)
-        self.onStopped()
-        pass
-
-    def onInput_onStop(self):
-        self.onUnload() #it is recommended to reuse the clean-up as the box is stopped
-        self.onStopped() #activate the output of the box
-
-    def onInput_Kegel(self, p):
-        pass]]></content></script><Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" /><Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" /><Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" /><Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" /><Output name="Amount" type="2" type_size="1" nature="2" inner="0" tooltip="Gibt die Anzahl der gefunden Kegel wieder" id="5" /><Parameter name="Cascade" inherits_from_parent="0" content_type="4" value="/../HaarCascade/Cascade_Kegel_Normal.xml" default_value="" tooltip="" id="6" /></Box><Link inputowner="1" indexofinput="2" outputowner="0" indexofoutput="2" /><Link inputowner="0" indexofinput="4" outputowner="1" indexofoutput="4" /><Link inputowner="13" indexofinput="2" outputowner="1" indexofoutput="5" /><Link inputowner="13" indexofinput="4" outputowner="1" indexofoutput="6" /><Link inputowner="13" indexofinput="5" outputowner="1" indexofoutput="6" /></Diagram></BehaviorKeyframe></BehaviorLayer></Timeline></Box></ChoregrapheProject>
+        self.ImageWidth = imageW
+        pass]]></content></script><Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" /><Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" /><Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" /><Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" /><Output name="KegelGefunden" type="1" type_size="1" nature="2" inner="0" tooltip="" id="5" /><Output name="Kegel" type="0" type_size="1" nature="2" inner="0" tooltip="Ein Kegel Objekt mit allen wichtigen Information (Höhe, Breite, Position X und Y)" id="6" /><Parameter name="Cascade" inherits_from_parent="0" content_type="4" value="/../HaarCascade/Cascade_Kegel_Normal.xml" default_value="" tooltip="" id="7" /></Box><Link inputowner="1" indexofinput="2" outputowner="0" indexofoutput="2" /><Link inputowner="0" indexofinput="4" outputowner="1" indexofoutput="4" /></Diagram></BehaviorKeyframe></BehaviorLayer></Timeline></Box></ChoregrapheProject>
