@@ -12,6 +12,7 @@
         <File name="haarcascade_eye" src="HaarCascade/haarcascade_eye.xml" />
         <File name="haarcascade_fullbody" src="HaarCascade/haarcascade_fullbody.xml" />
         <File name="Cascade_Kegel_Normal" src="behavior_1/HaarCascade/Cascade_Kegel_Normal.xml" />
+        <File name="Cascade_Kegel_Normal" src="behavior_1/behavior_1/HaarCascade/Cascade_Kegel_Normal.xml" />
     </Resources>
     <Topics />
     <IgnoredPaths />
