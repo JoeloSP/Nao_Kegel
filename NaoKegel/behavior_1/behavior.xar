@@ -85,13 +85,16 @@ class MyClass(GeneratedClass):
 
                     img = cv2.rectangle(img, (x,y), (x+w, y+h), (0, 255,0), 3)
                     self.log("GetKegel: Kegel WERTE is: %s - %s ; Position: x %s y %s" % (w, h, x, y))
+                #Save File https://stackoverflow.com/questions/51319930/how-to-write-and-log-to-a-file-on-my-nao-robot
 
-                cv2.imwrite(ALFrameManager.getBehaviorPath(self.behaviorId) + 'Kegel_copy.png', img)
+                cv2.imwrite('/home/nao/.local/share/Bilder/Kegel_copy.png', img)
+                #cv2.imwrite(ALFrameManager.getBehaviorPath(self.behaviorId) + 'Kegel_copy.png', img)
+
                 # Sendet ein Kegel-Objekt zurück, wenn er ein Kegel gefunden hat.
                 #self.log("GetKegel: Kegel height is: %s" % height)
                 if width > 0:
-                    self.log("GetKegel: camera Kegel is null: %s" % kegel is None)
                     a = [pX, pY, width, height, imageW, imageH]
+                    self.onUnload()
                     self.Kegel(a)
                 else:
                     self.onStopped()
@@ -118,10 +121,28 @@ class MyClass(GeneratedClass):
 
     def disconnectFromCamera(self):
         self.log("GetKegel: disconnecting from camera...")
+        if self.avd is not None:
+            try:
+                self.avd.unsubscribe( self.strMyClientName )
+            except BaseException, err:
+                self.log("GetKegel: error disconnecting from camera: %s" % err)
 
-        try:
-            self.avd.unsubscribe( self.strMyClientName )
-        except BaseException, err:
-            self.log("GetKegel: error disconnecting from camera: %s" % err)
+        self.log("GetKegel: disconnected from camera")]]></content></script><Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" /><Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" /><Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" /><Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" /><Output name="Kegel" type="0" type_size="1" nature="2" inner="0" tooltip="Ein Array Objekt mit allen wichtigen Information (Höhe, Breite, Position X und Y)" id="5" /><Parameter name="Cascade" inherits_from_parent="0" content_type="4" value="/HaarCascade/Cascade_Kegel_Normal.xml" default_value="" tooltip="" id="6" /></Box><Box name="ERROR_KeinKegel" id="2" localization="8" tooltip="" x="452" y="73"><bitmap>media/images/box/box-python-script.png</bitmap><script language="4"><content><![CDATA[class MyClass(GeneratedClass):
+    def __init__(self):
+        GeneratedClass.__init__(self)
 
-        self.log("GetKegel: disconnected from camera")]]></content></script><Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" /><Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" /><Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" /><Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" /><Output name="Kegel" type="0" type_size="1" nature="2" inner="0" tooltip="Ein Array Objekt mit allen wichtigen Information (Höhe, Breite, Position X und Y)" id="5" /><Parameter name="Cascade" inherits_from_parent="0" content_type="4" value="/HaarCascade/Cascade_Kegel_Normal.xml" default_value="" tooltip="" id="6" /></Box><Box name="ERROR_KeinKegel" id="2" localization="8" tooltip="" x="452" y="73"><bitmap>media/images/box/box-python-script.png</bitmap><script language="4"><content><![CDATA[]]></content></script><Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" /><Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" /><Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" /><Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" /></Box><Link inputowner="1" indexofinput="2" outputowner="3" indexofoutput="5" /><Link inputowner="2" indexofinput="2" outputowner="3" indexofoutput="4" /><Link inputowner="3" indexofinput="2" outputowner="0" indexofoutput="2" /></Diagram></BehaviorKeyframe></BehaviorLayer></Timeline></Box></ChoregrapheProject>
+    def onLoad(self):
+        #put initialization code here
+        pass
+
+    def onUnload(self):
+        #put clean-up code here
+        pass
+
+    def onInput_onStart(self):
+        #self.onStopped() #activate the output of the box
+        pass
+
+    def onInput_onStop(self):
+        self.onUnload() #it is recommended to reuse the clean-up as the box is stopped
+        self.onStopped() #activate the output of the box]]></content></script><Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" /><Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" /><Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" /><Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" /></Box><Link inputowner="1" indexofinput="2" outputowner="3" indexofoutput="5" /><Link inputowner="2" indexofinput="2" outputowner="3" indexofoutput="4" /><Link inputowner="3" indexofinput="2" outputowner="0" indexofoutput="2" /><Link inputowner="0" indexofinput="4" outputowner="2" indexofoutput="4" /><Link inputowner="0" indexofinput="4" outputowner="1" indexofoutput="3" /></Diagram></BehaviorKeyframe></BehaviorLayer></Timeline></Box></ChoregrapheProject>
