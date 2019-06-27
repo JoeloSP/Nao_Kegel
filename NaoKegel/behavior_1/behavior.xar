@@ -23,10 +23,10 @@
 
     def onInput_KegelErhalten(self, data = None):
         # Hier im Beispiel werden die Werte ausgegeben.
-        self.log("Die Werte vom Kegel sind: X %s - Y %s  W %s - H %s "%(data[0],data[1],data[2],data[3]))
+        self.logger.info("Die Werte vom Kegel sind: X %s - Y %s  W %s - H %s "%(data[0],data[1],data[2],data[3]))
         self.onUnload() #it is recommended to reuse the clean-up as the box is stopped
         self.onStopped() #activate the output of the box
-        pass]]></content></script><Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" /><Input name="KegelErhalten" type="0" type_size="1" nature="1" inner="0" tooltip="" id="2" /><Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="3" /></Box><Box name="GetKegel" id="3" localization="8" tooltip="Sucht und gibt ein Array mit Kegel Informationen zurück" x="214" y="80"><bitmap>media/images/box/tracker/tracker.png</bitmap><script language="4"><content><![CDATA[import cv2
+        pass]]></content></script><Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" /><Input name="KegelErhalten" type="0" type_size="1" nature="1" inner="0" tooltip="" id="2" /><Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="3" /></Box><Box name="GetKegel" id="3" localization="8" tooltip="Sucht und gibt ein Array mit Kegel Informationen zurück" x="138" y="46"><bitmap>media/images/box/tracker/tracker.png</bitmap><script language="4"><content><![CDATA[import cv2
 import numpy
 # https://stackoverflow.com/questions/22593451/how-to-import-opencv-on-nao-in-python
 
@@ -42,7 +42,7 @@ class MyClass(GeneratedClass):
         #put initialization code here
         self.connectToCamera()
         self.cascadeFile = ALFrameManager.getBehaviorPath(self.behaviorId) + self.getParameter("Cascade")
-        self.log("GetKegel: Cascade: %s" % self.cascadeFile)
+        self.logger.info("GetKegel: Cascade: %s" % self.cascadeFile)
         pass
 
     def onUnload(self):
@@ -55,13 +55,13 @@ class MyClass(GeneratedClass):
 
     def onInput_onStart(self):
         #self.onStopped() #activate the output of the box
-        self.log("GetKegel: getting camera image...")
+        self.logger.info("GetKegel: getting camera image...")
 
         try:
-            self.log("OpenCV Version %s" % cv2.__version__)
+            self.logger.info("OpenCV Version %s" % cv2.__version__)
             dataImage = self.avd.getImageRemote(self.strMyClientName)
 
-            self.log("GetKegel: camera image is null: %s" % dataImage is None)
+            self.logger.info("GetKegel: camera image is null: %s" % dataImage is None)
 
             width = 0
             height = 0
@@ -70,12 +70,12 @@ class MyClass(GeneratedClass):
             imageW = 0
             imageH = 0
             if dataImage is not None:
-                self.log("GetKegel: camera image got")
+                self.logger.info("GetKegel: camera image got")
                 img = (numpy.reshape(numpy.frombuffer(dataImage[6], dtype = '%iuint8' % dataImage[2]), (dataImage[1], dataImage[0], dataImage[2])))
                 imageH, imageW, channels = img.shape
                 img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
                 face_cascade = cv2.CascadeClassifier(self.cascadeFile)
-                faces = face_cascade.detectMultiScale(img_gray)
+                faces = face_cascade.detectMultiScale(img)
                 for x,y,w,h in faces:
                     if w > width:
                         width = w
@@ -84,7 +84,7 @@ class MyClass(GeneratedClass):
                         pY = y
 
                     img = cv2.rectangle(img, (x,y), (x+w, y+h), (0, 255,0), 3)
-                    self.log("GetKegel: Kegel WERTE is: %s - %s ; Position: x %s y %s" % (w, h, x, y))
+                    self.logger.info("GetKegel: Kegel WERTE is: %s - %s ; Position: x %s y %s" % (w, h, x, y))
                 #Save File https://stackoverflow.com/questions/51319930/how-to-write-and-log-to-a-file-on-my-nao-robot
 
                 cv2.imwrite('/home/nao/.local/share/Bilder/Kegel_copy.png', img)
@@ -101,7 +101,7 @@ class MyClass(GeneratedClass):
                     pass
 
         except BaseException, err:
-            self.log("ERROR: Error getting camera image: %s" % err)
+            self.logger.info("ERROR: Error getting camera image: %s" % err)
             self.onStopped()
         pass
 
@@ -110,24 +110,24 @@ class MyClass(GeneratedClass):
         self.onStopped() #activate the output of the box
 
     def connectToCamera(self):
-        self.log("GetKegel: connecting to camera...")
+        self.logger.info("GetKegel: connecting to camera...")
         try:
             self.avd = ALProxy("ALVideoDevice")
 
             self.strMyClientName = self.avd.subscribeCamera(self.getName(), 0, 1, 11, 5)
-            self.log("GetKegel: connected to camera")
+            self.logger.info("GetKegel: connected to camera")
         except BaseException, err:
-            self.log("GetKegel: error connecting to camera: %s" % err)
+            self.logger.info("GetKegel: error connecting to camera: %s" % err)
 
     def disconnectFromCamera(self):
-        self.log("GetKegel: disconnecting from camera...")
+        self.logger.info("GetKegel: disconnecting from camera...")
         if self.avd is not None:
             try:
                 self.avd.unsubscribe( self.strMyClientName )
             except BaseException, err:
-                self.log("GetKegel: error disconnecting from camera: %s" % err)
+                self.logger.info("GetKegel: error disconnecting from camera: %s" % err)
 
-        self.log("GetKegel: disconnected from camera")]]></content></script><Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" /><Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" /><Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" /><Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" /><Output name="Kegel" type="0" type_size="1" nature="2" inner="0" tooltip="Ein Array Objekt mit allen wichtigen Information (Höhe, Breite, Position X und Y)" id="5" /><Parameter name="Cascade" inherits_from_parent="0" content_type="4" value="/HaarCascade/Cascade_Kegel_Normal.xml" default_value="" tooltip="" id="6" /></Box><Box name="ERROR_KeinKegel" id="2" localization="8" tooltip="" x="452" y="73"><bitmap>media/images/box/box-python-script.png</bitmap><script language="4"><content><![CDATA[class MyClass(GeneratedClass):
+        self.logger.info("GetKegel: disconnected from camera")]]></content></script><Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" /><Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" /><Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" /><Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" /><Output name="Kegel" type="0" type_size="1" nature="2" inner="0" tooltip="Ein Array Objekt mit allen wichtigen Information (Höhe, Breite, Position X und Y)" id="5" /><Parameter name="Cascade" inherits_from_parent="0" content_type="4" value="/HaarCascade/Cascade_Kegel_Normal.xml" default_value="" tooltip="" id="6" /></Box><Box name="ERROR_KeinKegel" id="2" localization="8" tooltip="" x="452" y="73"><bitmap>media/images/box/box-python-script.png</bitmap><script language="4"><content><![CDATA[class MyClass(GeneratedClass):
     def __init__(self):
         GeneratedClass.__init__(self)
 
@@ -140,9 +140,56 @@ class MyClass(GeneratedClass):
         pass
 
     def onInput_onStart(self):
-        #self.onStopped() #activate the output of the box
+        self.onStopped() #activate the output of the box
         pass
 
     def onInput_onStop(self):
         self.onUnload() #it is recommended to reuse the clean-up as the box is stopped
-        self.onStopped() #activate the output of the box]]></content></script><Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" /><Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" /><Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" /><Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" /></Box><Link inputowner="1" indexofinput="2" outputowner="3" indexofoutput="5" /><Link inputowner="2" indexofinput="2" outputowner="3" indexofoutput="4" /><Link inputowner="3" indexofinput="2" outputowner="0" indexofoutput="2" /><Link inputowner="0" indexofinput="4" outputowner="2" indexofoutput="4" /><Link inputowner="0" indexofinput="4" outputowner="1" indexofoutput="3" /></Diagram></BehaviorKeyframe></BehaviorLayer></Timeline></Box></ChoregrapheProject>
+        self.onStopped() #activate the output of the box]]></content></script><Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" /><Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" /><Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" /><Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" /></Box><Box name="ZielMittig" id="4" localization="8" tooltip="" x="450" y="303"><bitmap>media/images/box/interaction/target_face.png</bitmap><script language="4"><content><![CDATA[class MyClass(GeneratedClass):
+    def __init__(self):
+        GeneratedClass.__init__(self)
+
+    def onLoad(self):
+        #put initialization code here
+        pass
+
+    def onUnload(self):
+        #put clean-up code here
+        pass
+
+    def onInput_InfoErhalten(self, p):
+        # Kegel Informationen
+        x = p[0]
+        y = p[1]
+        width = p[2]
+        height = p[3]
+        # Bild Informationen
+        ImageW = p[4]
+        ImageH = p[5]
+
+        centerH = x + (width / 2)
+        centerV = y + (height / 2)
+        center = [centerH, centerV]
+
+
+
+        mitteH1 = (ImageH /2)  -  (ImageH * 0.1)
+        mitteH2 = (ImageH /2 ) + (ImageH * 0.1)
+
+        mitteV1 = (ImageW /2)  -  (ImageW * 0.1)
+        mitteV2 = (ImageW /2 ) + (ImageW * 0.1)
+
+        if centerH <= mitteH2 and centerH >= mitteH1:
+            if centerV <= mitteV2 and centerV >= mitteV1:
+                self.logger.info("Ziel Mitting")
+                pass
+            else:
+                pass
+        else:
+            pass
+
+
+
+        #self.logger.info("Die Werte vom Kegel sind: X %s - Y %s  W %s - H %s "%(p[0],p[1],p[2],p[3]))
+        self.Ja() #activate the output of the box
+        pass]]></content></script><Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" /><Input name="InfoErhalten" type="0" type_size="1" nature="1" inner="0" tooltip="" id="2" /><Output name="Ja" type="1" type_size="1" nature="2" inner="0" tooltip="" id="3" /><Output name="Nein" type="1" type_size="1" nature="2" inner="0" tooltip="" id="4" /></Box><Link inputowner="2" indexofinput="2" outputowner="3" indexofoutput="4" /><Link inputowner="3" indexofinput="2" outputowner="0" indexofoutput="2" /><Link inputowner="0" indexofinput="4" outputowner="2" indexofoutput="4" /><Link inputowner="0" indexofinput="4" outputowner="1" indexofoutput="3" /><Link inputowner="4" indexofinput="2" outputowner="3" indexofoutput="5" /><Link inputowner="0" indexofinput="4" outputowner="4" indexofoutput="3" /></Diagram></BehaviorKeyframe></BehaviorLayer></Timeline></Box></ChoregrapheProject>
